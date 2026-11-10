@@ -25,10 +25,28 @@ function App() {
     setTotal(prev => prev + prod.precio);
   };
 
-  const procesarCobro = () => {
-    alert(`Venta registrada exitosamente por S/ ${total.toFixed(2)}`);
-    setCarrito([]);
-    setTotal(0);
+  const procesarCobro = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/api/productos/vender', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: carrito })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(`¡Venta realizada con éxito por S/ ${total.toFixed(2)}!\nEl stock se ha descontado de la base de datos.`);
+        setCarrito([]);
+        setTotal(0);
+        cargarInventario(); 
+      } else {
+        alert(`Error al procesar la venta: ${data.error}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error de conexión al procesar la venta.");
+    }
   };
 
   return (

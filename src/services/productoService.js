@@ -6,12 +6,24 @@ class ProductoService {
     }
 
     async crear(datos) {
-        const nuevo = new Producto(datos);
-        return await nuevo.save();
+        const nuevoProducto = new Producto(datos);
+        return await nuevoProducto.save();
     }
 
     async listarBajoStock() {
         return await Producto.find({ $expr: { $lte: ["$stock", "$stockMinimo"] } });
+    }
+
+    async procesarVenta(items) {
+        for (const item of items) {
+            const producto = await Producto.findById(item._id);
+            if (!producto || producto.stock < 1) {
+                throw new Error(`Stock insuficiente para: ${item.nombre}`);
+            }
+            producto.stock -= 1;
+            await producto.save();
+        }
+        return { mensaje: "Venta procesada y stock actualizado con éxito" };
     }
 }
 

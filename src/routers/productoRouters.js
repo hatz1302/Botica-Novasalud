@@ -5,5 +5,6 @@ const productoController = require('../controllers/productoController');
 router.get('/', productoController.obtenerTodos);
 router.post('/', productoController.crear);
 router.get('/bajo-stock', productoController.obtenerBajoStock);
+router.post('/vender', productoController.vender);
 
 module.exports = router;

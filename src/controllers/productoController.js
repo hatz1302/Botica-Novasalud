@@ -25,4 +25,13 @@ exports.obtenerBajoStock = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+
+};
+exports.vender = async (req, res) => {
+    try {
+        const resultado = await productoService.procesarVenta(req.body.items);
+        res.status(200).json(resultado);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
