@@ -8,10 +8,9 @@ const usuarioSchema = new mongoose.Schema({
     rol: { type: String, enum: ['ADMIN', 'FARMACEUTICO'], default: 'FARMACEUTICO' }
 }, { timestamps: true });
 
-usuarioSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
+usuarioSchema.pre('save', async function() {
+    if (!this.isModified('password')) return;
     this.password = await bcrypt.hash(this.password, 10);
-    next();
 });
 
 module.exports = mongoose.model('Usuario', usuarioSchema);
